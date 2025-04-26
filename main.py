@@ -42,7 +42,7 @@ def criar_conexoes():
         print(f"Vértice {nome_selecionado} não encontrado.")
         return
 
-    raio_conexao = 150 # raio de distância (pixels)
+    raio_conexao = 150  # raio de distância (pixels)
 
     for vertice_destino in vertices:
         if vertice_destino["nome"] == vertice_origem["nome"]:
@@ -53,7 +53,10 @@ def criar_conexoes():
             (vertice_origem["y"] - vertice_destino["y"]) ** 2
         )
 
-        if distancia <= raio_conexao:
+        # Arredonda a distância para o número inteiro mais próximo
+        distancia_int = round(distancia)
+
+        if distancia_int <= raio_conexao:
             # Escolhe uma cor aleatória para a conexão
             cor = random.choice(["red", "green", "blue", "purple", "orange", "cyan", "magenta", "gold", "pink"])
             # Criar a conexão visual (linha colorida)
@@ -62,9 +65,17 @@ def criar_conexoes():
                 vertice_destino["x"], vertice_destino["y"],
                 fill=cor, width=2
             )
+            # Exibe o peso (distância) ao lado da linha
+            canvas.create_text(
+                (vertice_origem["x"] + vertice_destino["x"]) / 2,
+                (vertice_origem["y"] + vertice_destino["y"]) / 2,
+                text=str(distancia_int),
+                fill="black",
+                font=("Arial", 10, "bold")
+            )
             # (Opcional) salvar essa conexão numa lista de arestas
-            arestas.append((vertice_origem["nome"], vertice_destino["nome"]))
-            print(f"Conexão criada: {vertice_origem['nome']} -> {vertice_destino['nome']} (Cor: {cor})")
+            arestas.append((vertice_origem["nome"], vertice_destino["nome"], distancia_int))
+            print(f"Conexão criada: {vertice_origem['nome']} -> {vertice_destino['nome']} (Distância: {distancia_int})")
 
 if __name__ == "__main__":
     root = tk.Tk()
