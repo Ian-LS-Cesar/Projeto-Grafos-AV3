@@ -5,6 +5,18 @@ from botoes import criar_botoes
 def imprimir_mensagem(mensagem):
     print(mensagem)
 
+#função para adicionar um vértice no ponto clicado
+def adicionar_vertice(event):
+    x, y = event.x, event.y
+    raio = 3 # raio do vértice
+
+    # desenhar o círculo no canvas
+    canvas.create_oval(x - raio, y - raio, x + raio, y + raio, fill="blue", outline="black")
+
+    # armazena a posição do vértice
+    vertices.append((x, y))
+    pint(f"Vértice criado em: ({x}, {y})")
+
 if __name__ == "__main__":
     root = tk.Tk()
     root.title("Gerenciador de Rede Elétrica")
@@ -20,6 +32,12 @@ if __name__ == "__main__":
 
     canvas = tk.Canvas(canvas_grafos, bg="white")
     canvas.pack(fill=tk.BOTH, expand=True)
+
+    # lista para armazenar os vértices
+    vertices = []
+
+    # vincular o evento de clique no canvas
+    canvas.bind("<Button-1>", adicionar_vertice)
 
     # Adicionando os botões com valores válidos
     try:
