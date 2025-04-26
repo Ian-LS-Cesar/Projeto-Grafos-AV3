@@ -29,7 +29,7 @@ def criar_conexoes():
         return
 
     # Pergunta ao usuário qual vértice ele quer conectar
-    nome_selecionado = simpledialog.askstring("Selecionar Vértice", "Digite o nome do vértice (ex: V3):")
+    nome_selecionado = simpledialog.askstring("Selecionar Vértice", "Digite o nome do vértice:")
 
     if not nome_selecionado:
         print("Nenhum vértice selecionado.")
@@ -42,7 +42,7 @@ def criar_conexoes():
         print(f"Vértice {nome_selecionado} não encontrado.")
         return
 
-    raio_conexao = 70  # raio de distância (pixels)
+    raio_conexao = 150 # raio de distância (pixels)
 
     for vertice_destino in vertices:
         if vertice_destino["nome"] == vertice_origem["nome"]:
