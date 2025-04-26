@@ -15,7 +15,7 @@ def adicionar_vertice(event):
 
     # armazena a posição do vértice
     vertices.append((x, y))
-    pint(f"Vértice criado em: ({x}, {y})")
+    print(f"Vértice criado em: ({x}, {y})")
 
 if __name__ == "__main__":
     root = tk.Tk()
