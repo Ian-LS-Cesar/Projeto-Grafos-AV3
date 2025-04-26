@@ -42,5 +42,12 @@ if __name__ == "__main__":
         botao_recalcular.pack(pady=20, padx=10)
     except Exception as e:
         print(f"Erro ao criar botão 'Recalcular Caminho': {e}")
+        
+    try:
+        botao_remover = criar_botoes(canvas_botoes, "Remover Poste", largura=150, altura=50, raio=20)
+        botao_remover.config(command=lambda: imprimir_mensagem("Remover Poste"))
+        botao_remover.pack(pady=20, padx=10)
+    except Exception as e:
+        print(f"Error ao criar botão 'Remover Poste: {e}")
 
     root.mainloop()
