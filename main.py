@@ -42,7 +42,7 @@ def criar_conexoes():
         print(f"Vértice {nome_selecionado} não encontrado.")
         return
 
-    raio_conexao = 150  # raio de distância (pixels)
+    raio_conexao = 170  # raio de distância (pixels)
 
     for vertice_destino in vertices:
         if vertice_destino["nome"] == vertice_origem["nome"]:
