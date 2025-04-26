@@ -8,14 +8,20 @@ def imprimir_mensagem(mensagem):
 #função para adicionar um vértice no ponto clicado
 def adicionar_vertice(event):
     x, y = event.x, event.y
-    raio = 3 # raio do vértice
+    raio = 5 # raio do vértice
 
     # desenhar o círculo no canvas
     canvas.create_oval(x - raio, y - raio, x + raio, y + raio, fill="blue", outline="black")
 
-    # armazena a posição do vértice
-    vertices.append((x, y))
-    print(f"Vértice criado em: ({x}, {y})")
+    # nome do vértice
+    nome_vertice = f"V{len(vertices) + 1}"
+
+    # escrever o nome do vértice
+    canvas.create_text(x, y - 10, text=nome_vertice, fill="black", font=("Arial", 10, "bold"))
+
+    # armazena a posição e nome do vértice
+    vertices.append({"nome": nome_vertice, "x": x, "y": y})
+    print(f"{nome_vertice} criado em: ({x}, {y})")
 
 if __name__ == "__main__":
     root = tk.Tk()
