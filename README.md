@@ -9,7 +9,7 @@
 - Sistema de infraestrutura de postes de energia utilizando Grafos. O tipo de grafo utilizado é uma Árvore Espelhada Mínima.
 - O Grafo é Não-Direcionado.
 - A distância entre os postes serão estipulados por meio de uma matriz de adjâncência.
-- Quando o poste estiver inativo, suas arestas serão cortadas e o caminho será recalculado
+- Quando o poste estiver inativo, suas arestas serão cortadas e o caminho será recalculado utilizando algoritmos Prim ou Kruskal.
 
 ## Passo-a-passo para execução do ambiente:
 1. Utilizar Python 3.13.3 para o projeto
