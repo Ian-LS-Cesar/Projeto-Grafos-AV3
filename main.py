@@ -58,7 +58,7 @@ def criar_conexoes():
         print(f"Vértice {nome_selecionado} não encontrado.")
         return
 
-    raio_conexao = 170  # raio de distância (pixels)
+    raio_conexao = 70  # raio de distância (pixels)
 
     for vertice_destino in vertices:
         if vertice_destino["nome"] == vertice_origem["nome"]:
@@ -93,6 +93,41 @@ def criar_conexoes():
             arestas.append((vertice_origem["nome"], vertice_destino["nome"], distancia_int))
             print(f"Conexão criada: {vertice_origem['nome']} -> {vertice_destino['nome']} (Distância: {distancia_int})")
 
+def remover_vertice():
+    if not vertices:
+        print("Nenhum vértice para remover.")
+        return
+
+    nome_remover = simpledialog.askstring("Remover Vértice", "Digite o nome do vértice a remover:")
+    
+    if not nome_remover:
+        print("Nenhum vértice informado.")
+        return
+    
+    vertice_remover = next((v for v in vertices if v["nome"] == nome_remover), None)
+    if not vertice_remover:
+        print(f"Vértice {nome_remover} não encontrado.")
+        return
+    
+    vertices.remove(vertice_remover)
+    global arestas
+    arestas = [a for a in arestas if a[0] != nome_remover and a[1] != nome_remover]
+    canvas.delete("all")
+    for v in vertices:
+        canvas.create_oval(v["x"] - 5, v["y"] - 5, v["x"] + 5, v["y"] + 5, fill="blue", outline="black")
+        canvas.create_text(v["x"], v["y"] - 10, text=["nome"], fill="black", font=("Helvetica", 10, "bold"))
+    for a in arestas:
+        v1 = next(v for v in vertices if v["nome"] == a[0])
+        v2 = next(v for v in vertices if v["nome"] == a[1])
+        canvas.create_line(v1["x"], v1["y"], v2["x"], v2["y"], fill="gray", width=2)
+        canvas.create_text(
+            (v1["x"] + v2["x"]) / 2,
+            (v1["y"] + v2["y"]) / 2,
+            text=str(a[2]),
+            fill="black",
+            font=("Helvetica", 10, "bold")
+        )
+    print(f"Vértice {nome_remover} e suas conexões removidas.")
 if __name__ == "__main__":
     root = tk.Tk()
     root.title("Gerenciador de Rede Elétrica")
@@ -140,7 +175,7 @@ if __name__ == "__main__":
         
     try:
         botao_remover = criar_botoes(canvas_botoes, "Remover Poste", largura=150, altura=50, raio=20)
-        botao_remover.config(command=lambda: imprimir_mensagem("Remover Poste"))
+        botao_remover.config(command=remover_vertice)
         botao_remover.pack(pady=20, padx=10)
     except Exception as e:
         print(f"Error ao criar botão 'Remover Poste: {e}")
