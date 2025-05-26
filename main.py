@@ -12,7 +12,7 @@ def toggle_adicionar_vertice():
     global adicionar_vertice, botao_adicionar
     adicionar_vertice = not adicionar_vertice
     if adicionar_vertice:
-        botao_adicionar.config(text="Modo Adição!!!")
+        botao_adicionar.config(text="Modo Adição")
         print("Modo de adição de vértice ATIVADO.")
     else:
         botao_adicionar.config(text="Adicionar Poste")
@@ -21,17 +21,18 @@ def toggle_adicionar_vertice():
 # Função para adicionar um vértice no ponto clicado
 def adicionar_vertice(event):
     global adicionar_vertice
-    
+
     if not adicionar_vertice:
         return
     x, y = canvas.canvasx(event.x), canvas.canvasy(event.y)
-    raio = 5  # raio do círculo (vértice)
+    raio = 12  # círculo maior
 
-    canvas.create_oval(x - raio, y - raio, x + raio, y + raio, fill="blue", outline="black")
+    canvas.create_oval(x - raio, y - raio, x + raio, y + raio, fill="#FCA311", outline="black")
 
     nome_vertice = f"V{len(vertices) + 1}"
 
-    canvas.create_text(x, y - 10, text=nome_vertice, fill="black", font=("Helvetica", 10, "bold"))
+    # Texto centralizado e maior
+    canvas.create_text(x, y, text=nome_vertice, fill="#14213D", font=("Helvetica", 9, "bold"))
 
     vertices.append({"nome": nome_vertice, "x": x, "y": y})
 
@@ -40,6 +41,7 @@ def adicionar_vertice(event):
 
 # Função para criar conexões automáticas com base no raio
 def criar_conexoes():
+    
     if not vertices:
         print("Nenhum vértice para conectar.")
         return
@@ -73,20 +75,19 @@ def criar_conexoes():
         distancia_int = round(distancia)
 
         if distancia_int <= raio_conexao:
-            # Escolhe uma cor aleatória para a conexão
-            cor = random.choice(["red", "green", "blue", "purple", "orange", "cyan", "magenta", "gold", "pink"])
             # Criar a conexão visual (linha colorida)
             canvas.create_line(
                 vertice_origem["x"], vertice_origem["y"],
                 vertice_destino["x"], vertice_destino["y"],
-                fill=cor, width=2
+                fill="#14213D",
+                width=2
             )
             # Exibe o peso (distância) ao lado da linha
             canvas.create_text(
                 (vertice_origem["x"] + vertice_destino["x"]) / 2,
                 (vertice_origem["y"] + vertice_destino["y"]) / 2,
                 text=str(distancia_int),
-                fill="black",
+                fill="#000000",
                 font=("Helvetica", 10, "bold")
             )
             # (Opcional) salvar essa conexão numa lista de arestas
@@ -114,12 +115,13 @@ def remover_vertice():
     arestas = [a for a in arestas if a[0] != nome_remover and a[1] != nome_remover]
     canvas.delete("all")
     for v in vertices:
-        canvas.create_oval(v["x"] - 5, v["y"] - 5, v["x"] + 5, v["y"] + 5, fill="blue", outline="black")
-        canvas.create_text(v["x"], v["y"] - 10, text=v["nome"], fill="black", font=("Helvetica", 10, "bold"))
+        raio = 12
+        canvas.create_oval(v["x"] - raio, v["y"] - raio, v["x"] + raio, v["y"] + raio, fill="#FCA311", outline="black")
+        canvas.create_text(v["x"], v["y"], text=v["nome"], fill="#14213D", font=("Helvetica", 9, "bold"))
     for a in arestas:
         v1 = next(v for v in vertices if v["nome"] == a[0])
         v2 = next(v for v in vertices if v["nome"] == a[1])
-        canvas.create_line(v1["x"], v1["y"], v2["x"], v2["y"], fill="gray", width=2)
+        canvas.create_line(v1["x"], v1["y"], v2["x"], v2["y"], fill="#000000", width=2)
         canvas.create_text(
             (v1["x"] + v2["x"]) / 2,
             (v1["y"] + v2["y"]) / 2,
@@ -186,28 +188,21 @@ if __name__ == "__main__":
 
     # Botões
     try:
-        botao_conexoes = criar_botoes(canvas_botoes, "Conexões", largura=150, altura=50, raio=20)
+        botao_conexoes = criar_botoes(canvas_botoes, "Conexões", "#FCA311","#14213D", largura=150, altura=50, raio=20)
         botao_conexoes.config(command=criar_conexoes)
         botao_conexoes.pack(pady=20, padx=10)
     except Exception as e:
         print(f"Erro ao criar botão 'Conexões': {e}")
-
+        
     try:
-        botao_adicionar = criar_botoes(canvas_botoes, "Adicionar Poste", largura=150, altura=50, raio=20)
+        botao_adicionar = criar_botoes(canvas_botoes, "Adicionar Poste","#FCA311","#14213D", largura=150, altura=50, raio=20)
         botao_adicionar.config(command=toggle_adicionar_vertice)
         botao_adicionar.pack(pady=20, padx=10)
     except Exception as e:
         print(f"Erro ao criar botão 'Adicionar Poste': {e}")
-
-    try:
-        botao_recalcular = criar_botoes(canvas_botoes, "Recalcular Caminho", largura=150, altura=50, raio=20)
-        botao_recalcular.config(command=lambda: imprimir_mensagem("Recalcular Caminho"))
-        botao_recalcular.pack(pady=20, padx=10)
-    except Exception as e:
-        print(f"Erro ao criar botão 'Recalcular Caminho': {e}")
         
     try:
-        botao_remover = criar_botoes(canvas_botoes, "Remover Poste", largura=150, altura=50, raio=20)
+        botao_remover = criar_botoes(canvas_botoes, "Remover Poste","#FCA311","#14213D", largura=150, altura=50, raio=20)
         botao_remover.config(command=remover_vertice)
         botao_remover.pack(pady=20, padx=10)
     except Exception as e:
