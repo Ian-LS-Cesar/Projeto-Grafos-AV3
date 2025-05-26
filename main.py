@@ -24,7 +24,7 @@ def adicionar_vertice(event):
     
     if not adicionar_vertice:
         return
-    x, y = event.x, event.y
+    x, y = canvas.canvasx(event.x), canvas.canvasy(event.y)
     raio = 5  # raio do círculo (vértice)
 
     canvas.create_oval(x - raio, y - raio, x + raio, y + raio, fill="blue", outline="black")
@@ -115,7 +115,7 @@ def remover_vertice():
     canvas.delete("all")
     for v in vertices:
         canvas.create_oval(v["x"] - 5, v["y"] - 5, v["x"] + 5, v["y"] + 5, fill="blue", outline="black")
-        canvas.create_text(v["x"], v["y"] - 10, text=["nome"], fill="black", font=("Helvetica", 10, "bold"))
+        canvas.create_text(v["x"], v["y"] - 10, text=v["nome"], fill="black", font=("Helvetica", 10, "bold"))
     for a in arestas:
         v1 = next(v for v in vertices if v["nome"] == a[0])
         v2 = next(v for v in vertices if v["nome"] == a[1])
@@ -128,6 +128,13 @@ def remover_vertice():
             font=("Helvetica", 10, "bold")
         )
     print(f"Vértice {nome_remover} e suas conexões removidas.")
+    
+def comecar_arrastar(event):
+    canvas.scan_mark(event.x, event.y)
+
+def arrastar(event):
+    canvas.scan_dragto(event.x, event.y, gain=1)
+    
 if __name__ == "__main__":
     root = tk.Tk()
     root.title("Gerenciador de Rede Elétrica")
@@ -138,18 +145,44 @@ if __name__ == "__main__":
     canvas_grafos = tk.Frame(root, width=600, height=600, bg="white")
     canvas_botoes = tk.Frame(root, width=200, height=600, bg="#f0f0f0")
 
+    scroll_y = tk.Scrollbar(canvas_grafos, orient="vertical")
+    scroll_x = tk.Scrollbar(canvas_grafos, orient="horizontal")
+    
     canvas_grafos.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
     canvas_botoes.pack(side=tk.RIGHT, fill=tk.Y)
 
-    canvas = tk.Canvas(canvas_grafos, bg="white")
-    canvas.pack(fill=tk.BOTH, expand=True)
+    canvas = tk.Canvas(
+        canvas_grafos, 
+        bg="white",
+        yscrollcommand=scroll_y.set,
+        xscrollcommand=scroll_x.set,
+        width=600,
+        height= 600,
+        scrollregion=(0, 0, 2000, 2000)
+    )
+    
+    scroll_y.config(command=canvas.yview)
+    scroll_x.config(command=canvas.xview)
+    
+    canvas.grid(row=0, column=0, sticky="nsew")
+    scroll_y.grid(row=0, column=1, sticky="ns")
+    scroll_x.grid(row=1, column=0, sticky="ew")
+    canvas_grafos.grid_rowconfigure(0, weight=1)
+    canvas_grafos.grid_columnconfigure(0, weight=1)
+    
+
+    #canvas.pack(fill=tk.BOTH, expand=True)
 
     # Listas para armazenar vértices e arestas
     vertices = []
     arestas = []
 
-    # Vincular o clique no canvas para criar vértices
-    canvas.bind("<Button-1>", adicionar_vertice)
+    # Vincular eventos
+    canvas.bind("<ButtonPress-3>", adicionar_vertice)        # Clique: adicionar vértice
+    canvas.bind("<ButtonPress-1>", comecar_arrastar)         # Clique simples: iniciar arrasto
+    canvas.bind("<B1-Motion>", arrastar)                     # Arrastar com botão esquerdo
+    canvas.bind("<ButtonPress-2>", comecar_arrastar)         # Botão do meio: iniciar arrasto
+    canvas.bind("<B2-Motion>", arrastar)                     # Arrastar com botão do meio
 
     # Botões
     try:
