@@ -7,8 +7,23 @@ from botoes import criar_botoes
 def imprimir_mensagem(mensagem):
     print(mensagem)
 
+#Função ON/OFF do potão de adicionar vértice
+def toggle_adicionar_vertice():
+    global adicionar_vertice, botao_adicionar
+    adicionar_vertice = not adicionar_vertice
+    if adicionar_vertice:
+        botao_adicionar.config(text="Modo Adição!!!")
+        print("Modo de adição de vértice ATIVADO.")
+    else:
+        botao_adicionar.config(text="Adicionar Poste")
+        print("Modo de adição de vértice DESATIVADO.")
+        
 # Função para adicionar um vértice no ponto clicado
 def adicionar_vertice(event):
+    global adicionar_vertice
+    
+    if not adicionar_vertice:
+        return
     x, y = event.x, event.y
     raio = 5  # raio do círculo (vértice)
 
@@ -16,11 +31,12 @@ def adicionar_vertice(event):
 
     nome_vertice = f"V{len(vertices) + 1}"
 
-    canvas.create_text(x, y - 10, text=nome_vertice, fill="black", font=("Arial", 10, "bold"))
+    canvas.create_text(x, y - 10, text=nome_vertice, fill="black", font=("Helvetica", 10, "bold"))
 
     vertices.append({"nome": nome_vertice, "x": x, "y": y})
 
     print(f"{nome_vertice} criado em ({x}, {y})")
+    
 
 # Função para criar conexões automáticas com base no raio
 def criar_conexoes():
@@ -71,7 +87,7 @@ def criar_conexoes():
                 (vertice_origem["y"] + vertice_destino["y"]) / 2,
                 text=str(distancia_int),
                 fill="black",
-                font=("Arial", 10, "bold")
+                font=("Helvetica", 10, "bold")
             )
             # (Opcional) salvar essa conexão numa lista de arestas
             arestas.append((vertice_origem["nome"], vertice_destino["nome"], distancia_int))
@@ -110,7 +126,7 @@ if __name__ == "__main__":
 
     try:
         botao_adicionar = criar_botoes(canvas_botoes, "Adicionar Poste", largura=150, altura=50, raio=20)
-        botao_adicionar.config(command=lambda: imprimir_mensagem("Adicionar Poste"))
+        botao_adicionar.config(command=toggle_adicionar_vertice)
         botao_adicionar.pack(pady=20, padx=10)
     except Exception as e:
         print(f"Erro ao criar botão 'Adicionar Poste': {e}")
@@ -128,5 +144,6 @@ if __name__ == "__main__":
         botao_remover.pack(pady=20, padx=10)
     except Exception as e:
         print(f"Error ao criar botão 'Remover Poste: {e}")
-
+    adicionar_vertice = False
+    
     root.mainloop()

@@ -27,6 +27,7 @@ def criar_botoes(master, texto, largura=150, altura=10, raio=2):
             bd=0,
             image=imagem_tk,
             compound="center"
+            
         )
 
         botao.image = imagem_tk  # Evitar garbage collection
