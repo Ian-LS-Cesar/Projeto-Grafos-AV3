@@ -41,7 +41,6 @@ def adicionar_vertice(event):
 
 # Função para criar conexões automáticas com base no raio
 def criar_conexoes():
-    
     if not vertices:
         print("Nenhum vértice para conectar.")
         return
@@ -61,33 +60,38 @@ def criar_conexoes():
         return
 
     raio_conexao = 70  # raio de distância (pixels)
+    raio = 12          # raio do círculo do vértice
 
     for vertice_destino in vertices:
         if vertice_destino["nome"] == vertice_origem["nome"]:
             continue  # não conectar consigo mesmo
 
-        distancia = math.sqrt(
-            (vertice_origem["x"] - vertice_destino["x"]) ** 2 +
-            (vertice_origem["y"] - vertice_destino["y"]) ** 2
-        )
+        dx = vertice_destino["x"] - vertice_origem["x"]
+        dy = vertice_destino["y"] - vertice_origem["y"]
+        distancia = math.sqrt(dx ** 2 + dy ** 2)
 
         # Arredonda a distância para o número inteiro mais próximo
         distancia_int = round(distancia)
 
-        if distancia_int <= raio_conexao:
+        if distancia_int <= raio_conexao and distancia != 0:
+            # Calcula os pontos ajustados para a linha começar/terminar na borda do círculo
+            x1 = vertice_origem["x"] + dx * raio / distancia
+            y1 = vertice_origem["y"] + dy * raio / distancia
+            x2 = vertice_destino["x"] - dx * raio / distancia
+            y2 = vertice_destino["y"] - dy * raio / distancia
+
             # Criar a conexão visual (linha colorida)
             canvas.create_line(
-                vertice_origem["x"], vertice_origem["y"],
-                vertice_destino["x"], vertice_destino["y"],
-                fill="#14213D",
+                x1, y1, x2, y2,
+                fill="#FCA311",
                 width=2
             )
             # Exibe o peso (distância) ao lado da linha
             canvas.create_text(
-                (vertice_origem["x"] + vertice_destino["x"]) / 2,
-                (vertice_origem["y"] + vertice_destino["y"]) / 2,
+                (x1 + x2) / 2,
+                (y1 + y2) / 2,
                 text=str(distancia_int),
-                fill="#000000",
+                fill="#14213D",
                 font=("Helvetica", 10, "bold")
             )
             # (Opcional) salvar essa conexão numa lista de arestas
@@ -121,12 +125,12 @@ def remover_vertice():
     for a in arestas:
         v1 = next(v for v in vertices if v["nome"] == a[0])
         v2 = next(v for v in vertices if v["nome"] == a[1])
-        canvas.create_line(v1["x"], v1["y"], v2["x"], v2["y"], fill="#000000", width=2)
+        canvas.create_line(v1["x"], v1["y"], v2["x"], v2["y"], fill="#E5E5E5", width=2)
         canvas.create_text(
             (v1["x"] + v2["x"]) / 2,
             (v1["y"] + v2["y"]) / 2,
             text=str(a[2]),
-            fill="black",
+            fill="#14213D",
             font=("Helvetica", 10, "bold")
         )
     print(f"Vértice {nome_remover} e suas conexões removidas.")
