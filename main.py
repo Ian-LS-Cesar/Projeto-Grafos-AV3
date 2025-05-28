@@ -210,6 +210,9 @@ def remover_vertice():
             font=("Helvetica", 10, "bold")
         )
     print(f"Vértice {nome_remover} e suas conexões removidas.")
+    
+     # Recalcula e redesenha a MST automaticamente
+    gerar_mst()
 
 # =====================
 # Eventos do Canvas
