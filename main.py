@@ -20,7 +20,7 @@ def gerar_mst():
     if not vertices:
         print("Nenhum vértice para gerar MST.")
         return
-    
+
     todas_arestas = []
     for i in range(len(vertices)):
         for j in range(i + 1, len(vertices)):
@@ -31,10 +31,17 @@ def gerar_mst():
             distancia = math.sqrt(dx**2 + dy**2)
             distancia_int = round(distancia)
             todas_arestas.append((v1["nome"], v2["nome"], distancia_int))
-    
+
     mst = prim_mst(todas_arestas)
     canvas.delete("mst")
-    
+
+    # Apaga apenas as conexões que estão na MST
+    for u, v, peso in mst:
+        tag1 = f"conexao_{u}_{v}"
+        tag2 = f"conexao_{v}_{u}"
+        canvas.delete(tag1)
+        canvas.delete(tag2)
+
     for u, v, peso in mst:
         desenhar_aresta_mst(u, v, peso)
 
@@ -98,6 +105,50 @@ def desenhar_aresta_mst(u, v, peso):
         tags="mst"
     )
 
+def criar_conexoes():
+    if not vertices:
+        print("Nenhum vértice para conectar.")
+        return
+
+    raio_conexao = 200  # raio de distância (pixels)
+    raio = 12          # raio do círculo do vértice
+
+    for i, vertice_origem in enumerate(vertices):
+        for j, vertice_destino in enumerate(vertices):
+            if i >= j:
+                continue  # evita duplicidade e auto-conexão
+
+            dx = vertice_destino["x"] - vertice_origem["x"]
+            dy = vertice_destino["y"] - vertice_origem["y"]
+            distancia = math.sqrt(dx ** 2 + dy ** 2)
+            distancia_int = round(distancia)
+
+            if distancia_int <= raio_conexao and distancia != 0:
+                # Calcula os pontos ajustados para a linha começar/terminar na borda do círculo
+                x1 = vertice_origem["x"] + dx * raio / distancia
+                y1 = vertice_origem["y"] + dy * raio / distancia
+                x2 = vertice_destino["x"] - dx * raio / distancia
+                y2 = vertice_destino["y"] - dy * raio / distancia
+
+                # ...dentro de criar_conexoes...
+                tag_conexao = f"conexao_{vertice_origem['nome']}_{vertice_destino['nome']}"
+                canvas.create_line(
+                    x1, y1, x2, y2,
+                    fill="#14213D",
+                    width=2,
+                    tags=("conexao", tag_conexao)
+                )
+                canvas.create_text(
+                    (x1 + x2) / 2,
+                    (y1 + y2) / 2,
+                    text=str(distancia_int),
+                    fill="#FCA311",
+                    font=("Helvetica", 10, "bold"),
+                    tags=("conexao", tag_conexao)
+                )
+# ...restante do código...
+                arestas.append((vertice_origem["nome"], vertice_destino["nome"], distancia_int))
+                print(f"Conexão criada: {vertice_origem['nome']} <-> {vertice_destino['nome']} (Distância: {distancia_int})")
 # =====================
 # Funções de Interface
 # =====================
@@ -126,51 +177,6 @@ def adicionar_vertice(event):
     canvas.create_text(x, y, text=nome_vertice, fill="#14213D", font=("Helvetica", 9, "bold"))
     vertices.append({"nome": nome_vertice, "x": x, "y": y})
     print(f"{nome_vertice} criado em ({x}, {y})")
-
-def criar_conexoes():
-    if not vertices:
-        print("Nenhum vértice para conectar.")
-        return
-    
-    nome_selecionado = simpledialog.askstring("Selecionar Vértice", "Digite o nome do vértice:")
-    
-    if not nome_selecionado:
-        print("Nenhum vértice selecionado.")
-        return
-    
-    vertice_origem = next((v for v in vertices if v["nome"] == nome_selecionado), None)
-    
-    if not vertice_origem:
-        print(f"Vértice {nome_selecionado} não encontrado.")
-        return
-    
-    raio_conexao = 70
-    raio = 12
-    
-    for vertice_destino in vertices:
-        if vertice_destino["nome"] == vertice_origem["nome"]:
-            continue
-        
-        dx = vertice_destino["x"] - vertice_origem["x"]
-        dy = vertice_destino["y"] - vertice_origem["y"]
-        distancia = math.sqrt(dx ** 2 + dy ** 2)
-        distancia_int = round(distancia)
-        
-        if distancia_int <= raio_conexao and distancia != 0:
-            x1 = vertice_origem["x"] + dx * raio / distancia
-            y1 = vertice_origem["y"] + dy * raio / distancia
-            x2 = vertice_destino["x"] - dx * raio / distancia
-            y2 = vertice_destino["y"] - dy * raio / distancia
-            
-            canvas.create_line(x1, y1, x2, y2, fill="#FCA311", width=2)
-            canvas.create_text(
-                (x1 + x2)/2, (y1 + y2)/2,
-                text=str(distancia_int),
-                fill="#14213D",
-                font=("Helvetica", 10, "bold")
-            )
-            arestas.append((vertice_origem["nome"], vertice_destino["nome"], distancia_int))
-            print(f"Conexão criada: {vertice_origem['nome']} -> {vertice_destino['nome']} (Distância: {distancia_int})")
 
 def remover_vertice():
     if not vertices:
