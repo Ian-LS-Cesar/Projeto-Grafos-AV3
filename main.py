@@ -16,32 +16,27 @@ adicionar_vertice = False
 # Funções do Algoritmo MST (Prim)
 # =====================
 def gerar_mst():
-    """Gera e desenha a MST usando o algoritmo de Prim"""
+    """Gera e desenha a MST usando o algoritmo de Prim apenas com as arestas existentes."""
     if not vertices:
         print("Nenhum vértice para gerar MST.")
         return
-
-    todas_arestas = []
-    for i in range(len(vertices)):
-        for j in range(i + 1, len(vertices)):
-            v1 = vertices[i]
-            v2 = vertices[j]
-            dx = v1["x"] - v2["x"]
-            dy = v1["y"] - v2["y"]
-            distancia = math.sqrt(dx**2 + dy**2)
-            distancia_int = round(distancia)
-            todas_arestas.append((v1["nome"], v2["nome"], distancia_int))
-
+    if not arestas:
+        print("Nenhuma aresta existente para gerar MST.")
+        return
+    
+    todas_arestas = arestas.copy()  # Usar apenas as arestas já adicionadas manualmente
     mst = prim_mst(todas_arestas)
-    canvas.delete("mst")
+    
+    canvas.delete("mst")  # Remove MST anterior
 
-    # Apaga apenas as conexões que estão na MST
+    # Remove conexões que estão na MST para evitar sobreposição
     for u, v, peso in mst:
         tag1 = f"conexao_{u}_{v}"
         tag2 = f"conexao_{v}_{u}"
         canvas.delete(tag1)
         canvas.delete(tag2)
 
+    # Desenha a nova MST
     for u, v, peso in mst:
         desenhar_aresta_mst(u, v, peso)
 
@@ -146,7 +141,6 @@ def criar_conexoes():
                     font=("Helvetica", 10, "bold"),
                     tags=("conexao", tag_conexao)
                 )
-# ...restante do código...
                 arestas.append((vertice_origem["nome"], vertice_destino["nome"], distancia_int))
                 print(f"Conexão criada: {vertice_origem['nome']} <-> {vertice_destino['nome']} (Distância: {distancia_int})")
 # =====================
