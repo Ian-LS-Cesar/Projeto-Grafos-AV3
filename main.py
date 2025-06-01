@@ -129,7 +129,7 @@ def criar_conexoes():
                 tag_conexao = f"conexao_{vertice_origem['nome']}_{vertice_destino['nome']}"
                 canvas.create_line(
                     x1, y1, x2, y2,
-                    fill="#14213D",
+                    fill="#FCA311",
                     width=2,
                     tags=("conexao", tag_conexao)
                 )
@@ -137,7 +137,7 @@ def criar_conexoes():
                     (x1 + x2) / 2,
                     (y1 + y2) / 2,
                     text=str(distancia_int),
-                    fill="#FCA311",
+                    fill="#14213D",
                     font=("Helvetica", 10, "bold"),
                     tags=("conexao", tag_conexao)
                 )
@@ -202,7 +202,7 @@ def remover_vertice():
     for a in arestas:
         v1 = next(v for v in vertices if v["nome"] == a[0])
         v2 = next(v for v in vertices if v["nome"] == a[1])
-        canvas.create_line(v1["x"], v1["y"], v2["x"], v2["y"], fill="#E5E5E5", width=2)
+        canvas.create_line(v1["x"], v1["y"], v2["x"], v2["y"], fill="#FCA311", width=2)
         canvas.create_text(
             (v1["x"] + v2["x"])/2, (v1["y"] + v2["y"])/2,
             text=str(a[2]),
