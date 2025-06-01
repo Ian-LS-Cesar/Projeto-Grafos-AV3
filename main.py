@@ -202,12 +202,24 @@ def remover_vertice():
     for a in arestas:
         v1 = next(v for v in vertices if v["nome"] == a[0])
         v2 = next(v for v in vertices if v["nome"] == a[1])
-        canvas.create_line(v1["x"], v1["y"], v2["x"], v2["y"], fill="#FCA311", width=2)
+        raio = 12
+        dx = v2["x"] - v1["x"]
+        dy = v2["y"] - v1["y"]
+        distancia = math.sqrt(dx ** 2 + dy ** 2)
+        if distancia == 0:
+            continue
+        x1 = v1["x"] + dx * raio / distancia
+        y1 = v1["y"] + dy * raio / distancia
+        x2 = v2["x"] - dx * raio / distancia
+        y2 = v2["y"] - dy * raio / distancia
+        tag_conexao = f"conexao_{v1['nome']}_{v2['nome']}"
+        canvas.create_line(x1, y1, x2, y2, fill="#FCA311", width=2, tags=("conexao", tag_conexao))
         canvas.create_text(
-            (v1["x"] + v2["x"])/2, (v1["y"] + v2["y"])/2,
+            (x1 + x2)/2, (y1 + y2)/2,
             text=str(a[2]),
             fill="#14213D",
-            font=("Helvetica", 10, "bold")
+            font=("Helvetica", 10, "bold"),
+            tags=("conexao", tag_conexao)
         )
     print(f"Vértice {nome_remover} e suas conexões removidas.")
     
