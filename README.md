@@ -6,10 +6,9 @@
     - Letícia Maria Cunha
 
 ### Detalhes da Implementação do Trabalho:
-- Sistema de infraestrutura de postes de energia utilizando Grafos. O tipo de grafo utilizado é uma Árvore Espelhada Mínima.
-- O Grafo é Não-Direcionado.
-- A distância entre os postes serão estipulados por meio de uma matriz de adjâncência.
-- Quando o poste estiver inativo, suas arestas serão cortadas e o caminho será recalculado utilizando algoritmos Prim ou Kruskal.
+- Sistema de infraestrutura de postes de energia utilizando Grafos. O tipo de grafo implementado é uma Árvore Espalhada Mínima.
+- O Grafo é Ponderado, Não-Direcionado e Acíclico na implementação do Prim para geração do melhor caminho.
+- Quando o poste estiver inativo, suas arestas serão cortadas e o caminho será recalculado utilizando algoritmos Prim.
 
 ## Passo-a-passo para execução do ambiente:
 1. Utilizar Python 3.13.3 para o projeto
