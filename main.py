@@ -11,17 +11,23 @@ from botoes import criar_botoes
 vertices = []
 arestas = []
 adicionar_vertice = False
+peso_mst = 0
 
 # =====================
 # Funções do Algoritmo MST (Prim)
 # =====================
 def gerar_mst():
     """Gera e desenha a MST usando o algoritmo de Prim apenas com as arestas existentes."""
+    global peso_mst
     if not vertices:
         print("Nenhum vértice para gerar MST.")
+        peso_mst = 0
+        atualizar_label_peso_mst()
         return
     if not arestas:
         print("Nenhuma aresta existente para gerar MST.")
+        peso_mst = 0
+        atualizar_label_peso_mst()
         return
     
     todas_arestas = arestas.copy()  # Usar apenas as arestas já adicionadas manualmente
@@ -39,6 +45,10 @@ def gerar_mst():
     # Desenha a nova MST
     for u, v, peso in mst:
         desenhar_aresta_mst(u, v, peso)
+
+    # Atualiza o peso total da MST
+    peso_mst = sum(peso for _, _, peso in mst)
+    atualizar_label_peso_mst()
 
 def prim_mst(todas_arestas):
     """Implementa o algoritmo de Prim para encontrar a MST"""
@@ -105,7 +115,7 @@ def criar_conexoes():
         print("Nenhum vértice para conectar.")
         return
 
-    raio_conexao = 200  # raio de distância (pixels)
+    raio_conexao = 150  # raio de distância (pixels)
     raio = 12          # raio do círculo do vértice
 
     for i, vertice_origem in enumerate(vertices):
@@ -226,6 +236,18 @@ def remover_vertice():
      # Recalcula e redesenha a MST automaticamente
     gerar_mst()
 
+def atualizar_label_peso_mst():
+    label_peso_mst.config(text=f"Peso Total: {peso_mst}")
+
+def resetar_arvore():
+    global vertices, arestas, peso_mst
+    vertices.clear()
+    arestas.clear()
+    peso_mst = 0
+    canvas.delete("all")
+    atualizar_label_peso_mst()
+    print("Árvore resetada.")
+
 # =====================
 # Eventos do Canvas
 # =====================
@@ -311,5 +333,16 @@ if __name__ == "__main__":
         botao_caminho.pack(pady=20, padx=10)
     except Exception as e:
         print(f"Erro ao criar botão 'Gerar MST': {e}")
+
+    try:
+        botao_resetar = criar_botoes(canvas_botoes, "Resetar Árvore", "#14213D", "#FCA311", largura=150, altura=50, raio=20)
+        botao_resetar.config(command=resetar_arvore)
+        botao_resetar.pack(pady=20, padx=10)
+    except Exception as e:
+        print(f"Erro ao criar botão 'Resetar Árvore': {e}")
+
+    # Label para mostrar o peso da MST
+    label_peso_mst = tk.Label(canvas_botoes, text="Peso Total: 0", font=("Helvetica", 12, "bold"), bg="#FCA311", fg="#14213D")
+    label_peso_mst.pack(pady=10, padx=10)
 
     root.mainloop()
