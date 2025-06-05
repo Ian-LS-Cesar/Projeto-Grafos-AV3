@@ -2,7 +2,7 @@
 
 ## Grupo:
     - Guadalupe Prado
-    - Ian Lucas
+    - Ian Lucas S. César
     - Letícia Maria Cunha
 
 ### Detalhes da Implementação do Trabalho:
